@@ -22,17 +22,11 @@
  *    SOFTWARE.
  */
 
-#include "includes.h"
+#ifndef YUNDINGXX_CLI_CMD_H
+#define YUNDINGXX_CLI_CMD_H
 
-int
-main(int argc, char *argv[]) {
+// 接收命令
+void
+receiving_and_processing_command();
 
-    init_all();
-
-    receiving_and_processing_command();
-
-    deinit_all();
-
-    return 0;
-
-}
+#endif //YUNDINGXX_CLI_CMD_H

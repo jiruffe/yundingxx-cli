@@ -22,17 +22,13 @@
  *    SOFTWARE.
  */
 
-#include "includes.h"
+#ifndef YUNDINGXX_CLI_INCLUDES_H
+#define YUNDINGXX_CLI_INCLUDES_H
 
-int
-main(int argc, char *argv[]) {
+#include "config.h"
+#include "api/api.h"
+#include "cli/cli.h"
+#include "cmd/cmd.h"
+#include "init/init.h"
 
-    init_all();
-
-    receiving_and_processing_command();
-
-    deinit_all();
-
-    return 0;
-
-}
+#endif //YUNDINGXX_CLI_INCLUDES_H

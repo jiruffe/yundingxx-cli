@@ -22,17 +22,9 @@
  *    SOFTWARE.
  */
 
-#include "includes.h"
+#ifndef YUNDINGXX_CLI_CONFIG_H
+#define YUNDINGXX_CLI_CONFIG_H
 
-int
-main(int argc, char *argv[]) {
+#define YDXX_DEBUG
 
-    init_all();
-
-    receiving_and_processing_command();
-
-    deinit_all();
-
-    return 0;
-
-}
+#endif //YUNDINGXX_CLI_CONFIG_H

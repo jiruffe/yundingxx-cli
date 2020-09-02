@@ -22,17 +22,35 @@
  *    SOFTWARE.
  */
 
-#include "includes.h"
+#include "init.h"
 
-int
-main(int argc, char *argv[]) {
+#include <locale.h>
 
-    init_all();
+#include "../cli/cli.h"
 
-    receiving_and_processing_command();
+// 初始化全部
+void
+init_all() {
+    // 允许中文
+#if defined(__linux__)
+    setlocale(LC_ALL, "zh_CN.UTF-8");
+#elif defined(__unix__)
+    setlocale(LC_ALL, "zh_CN.UTF-8");
+#elif defined(_WIN32)
+    setlocale(LC_ALL, "zh-CN");
+#elif defined(_WIN64)
+    setlocale(LC_ALL, "zh-CN");
+#elif defined(__APPLE__)
+    setlocale(LC_ALL, "zh_CN.UTF-8");
+#else
+    setlocale(LC_ALL, "zh_CN.UTF-8");
+#endif
+    // 初始化ncurses
+    init_ncurses();
+}
 
-    deinit_all();
-
-    return 0;
-
+// 结束全部
+void
+deinit_all() {
+    deinit_ncurses();
 }

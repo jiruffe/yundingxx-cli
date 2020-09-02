@@ -22,17 +22,4 @@
  *    SOFTWARE.
  */
 
-#include "includes.h"
-
-int
-main(int argc, char *argv[]) {
-
-    init_all();
-
-    receiving_and_processing_command();
-
-    deinit_all();
-
-    return 0;
-
-}
+#include "api.h"

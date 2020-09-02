@@ -22,17 +22,47 @@
  *    SOFTWARE.
  */
 
-#include "includes.h"
+#include "../config.h"
 
-int
-main(int argc, char *argv[]) {
+#ifndef YUNDINGXX_CLI_CLI_H
+#define YUNDINGXX_CLI_CLI_H
 
-    init_all();
+#ifndef YDXX_OUTPUT_DIRECTION_IN
+#define YDXX_OUTPUT_DIRECTION_IN '<'
+#endif
 
-    receiving_and_processing_command();
+#ifndef YDXX_OUTPUT_DIRECTION_OUT
+#define YDXX_OUTPUT_DIRECTION_OUT '>'
+#endif
 
-    deinit_all();
+// 初始化ncurses
+void
+init_ncurses();
 
-    return 0;
+// 结束ncurses
+void
+deinit_ncurses();
 
-}
+// 清除输入窗口的回显
+void
+clear_win_input();
+
+// 在输入窗口回显
+void
+show_in_win_input(const char *str);
+
+// 从输入窗口读入输入
+char
+read_c_from_win_input();
+
+// 在输出窗口显示内容
+void
+show_in_win_output(char dir, const char *str);
+
+#ifdef YDXX_DEBUG
+// 在调试窗口显示内容
+void
+show_in_win_debug(char dir, const char *str);
+#endif
+
+#endif //YUNDINGXX_CLI_CLI_H
