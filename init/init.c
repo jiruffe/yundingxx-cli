@@ -27,6 +27,7 @@
 #include <locale.h>
 
 #include "../cli/cli.h"
+#include "../game/game.h"
 
 // 初始化全部
 void
@@ -45,12 +46,14 @@ init_all() {
 #else
     setlocale(LC_ALL, "zh_CN.UTF-8");
 #endif
-    // 初始化ncurses
-    init_ncurses();
+    // 初始化cli
+    cli_init();
+    // 初始化游戏
+    game_init();
 }
 
 // 结束全部
 void
 deinit_all() {
-    deinit_ncurses();
+    cli_deinit();
 }

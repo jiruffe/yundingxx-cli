@@ -29,6 +29,7 @@
 #include "api/api.h"
 #include "cli/cli.h"
 #include "cmd/cmd.h"
+#include "game/game.h"
 #include "init/init.h"
 
 #endif //YUNDINGXX_CLI_INCLUDES_H

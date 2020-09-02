@@ -35,34 +35,34 @@
 #define YDXX_OUTPUT_DIRECTION_OUT '>'
 #endif
 
-// 初始化ncurses
+// 初始化
 void
-init_ncurses();
+cli_init();
 
-// 结束ncurses
+// 结束
 void
-deinit_ncurses();
+cli_deinit();
 
 // 清除输入窗口的回显
 void
-clear_win_input();
+cli_clearWinInput();
 
 // 在输入窗口回显
 void
-show_in_win_input(const char *str);
+cli_showInWinInput(const char *str);
 
 // 从输入窗口读入输入
 char
-read_c_from_win_input();
+cli_readCharFromWinInput();
 
 // 在输出窗口显示内容
 void
-show_in_win_output(char dir, const char *str);
+cli_showInWinOutput(char dir, const char *str);
 
 #ifdef YDXX_DEBUG
 // 在调试窗口显示内容
 void
-show_in_win_debug(char dir, const char *str);
+cli_showInWinDebug(char dir, const char *str);
 #endif
 
 #endif //YUNDINGXX_CLI_CLI_H

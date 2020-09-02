@@ -29,7 +29,7 @@ main(int argc, char *argv[]) {
 
     init_all();
 
-    receiving_and_processing_command();
+    game_run();
 
     deinit_all();
 

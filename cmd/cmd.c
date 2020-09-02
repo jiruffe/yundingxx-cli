@@ -29,6 +29,7 @@
 #include <ctype.h>
 #include <stdbool.h>
 
+#include "../config.h"
 #include "../cli/cli.h"
 #include "../api/api.h"
 
@@ -73,7 +74,7 @@ struct COMMAND {
 // 命令转换
 static
 int
-cast_command(command_t *command, char *command_string) {
+cmd_castCommand(command_t *command, char *command_string) {
     command->original_string = command_string;
     command->original_string_length = strlen(command_string);
     // 用空格分割
@@ -96,7 +97,7 @@ cast_command(command_t *command, char *command_string) {
 
 // 接收命令
 void
-receiving_and_processing_command() {
+cmd_receivingAndProcessingCommand() {
 
     char key;
     char tmp_key[2] = {0};
@@ -106,17 +107,17 @@ receiving_and_processing_command() {
 
     while (true) {
         // 在最底下显示现在的命令内容
-        show_in_win_input(command_string);
+        cli_showInWinInput(command_string);
         // 读入输入
-        key = read_c_from_win_input();
+        key = cli_readCharFromWinInput();
         if (!isprint(key)) {
             if (YDXX_COMMAND_KEY_PROCESS == key) {
                 // 清空现在显示的输入
-                clear_win_input();
+                cli_clearWinInput();
                 // 显示一行表示接收到命令
-                show_in_win_output(YDXX_OUTPUT_DIRECTION_IN, command_string);
+                cli_showInWinOutput(YDXX_OUTPUT_DIRECTION_IN, command_string);
                 // 处理命令
-                cast_command(command, command_string);
+                cmd_castCommand(command, command_string);
                 switch (command->command_type) {
                     case QUIT:
                         goto lb_exit;

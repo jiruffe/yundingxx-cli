@@ -23,3 +23,12 @@
  */
 
 #include "api.h"
+
+#include "../config.h"
+
+#ifndef YDXX_REMOTE_URL_LOGIN
+#define YDXX_REMOTE_URL_LOGIN "ws://yundingxx.com:3014/"
+#endif
+#ifndef YDXX_REMOTE_URL_GAME
+#define YDXX_REMOTE_URL_GAME "ws://yundingxx.com:3052/"
+#endif

@@ -27,6 +27,6 @@
 
 // 接收命令
 void
-receiving_and_processing_command();
+cmd_receivingAndProcessingCommand();
 
 #endif //YUNDINGXX_CLI_CMD_H

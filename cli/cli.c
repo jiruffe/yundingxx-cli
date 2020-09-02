@@ -39,15 +39,15 @@ static struct win_holder {
 // 刷新全部显示
 static
 void
-refresh_all() {
+cli_refreshAll() {
     touchwin(stdscr);
     refresh();
 }
 
-// 初始化ncurses
+// 初始化
 void
-init_ncurses() {
-    // 初始化
+cli_init() {
+    // 初始化ncurses
     initscr();
     // 禁用行缓冲、禁用CTRL+C
     raw();
@@ -64,53 +64,55 @@ init_ncurses() {
     win_holder.win_output = subwin(stdscr, LINES - 1, COLS, 0, 0);
 #endif
     // 刷新
-    refresh_all();
+    cli_refreshAll();
 }
 
-// 结束ncurses
+// 结束
 void
-deinit_ncurses() {
+cli_deinit() {
+    // 删除窗口
     delwin(win_holder.win_input);
     delwin(win_holder.win_output);
 #ifdef YDXX_DEBUG
     delwin(win_holder.win_debug);
 #endif
+    // 关闭
     endwin();
 }
 
 // 清除输入窗口的回显
 void
-clear_win_input() {
+cli_clearWinInput() {
     wclear(win_holder.win_input);
-    refresh_all();
+    cli_refreshAll();
 }
 
 // 在输入窗口回显
 void
-show_in_win_input(const char *str) {
-    clear_win_input();
+cli_showInWinInput(const char *str) {
+    cli_clearWinInput();
     wprintw(win_holder.win_input, str);
-    refresh_all();
+    cli_refreshAll();
 }
 
 // 从输入窗口读入输入
 char
-read_c_from_win_input() {
+cli_readCharFromWinInput() {
     return wgetch(win_holder.win_input);
 }
 
 // 在输出窗口显示内容
 void
-show_in_win_output(char dir, const char *str) {
+cli_showInWinOutput(char dir, const char *str) {
     wprintw(win_holder.win_output, "%c %s\n", dir, str);
-    refresh_all();
+    cli_refreshAll();
 }
 
 #ifdef YDXX_DEBUG
 // 在调试窗口显示内容
 void
-show_in_win_debug(char dir, const char *str) {
+cli_showInWinDebug(char dir, const char *str) {
     wprintw(win_holder.win_debug, "%c %s\n", dir, str);
-    refresh_all();
+    cli_refreshAll();
 }
 #endif
