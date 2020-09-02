@@ -24,6 +24,8 @@
 
 #include "api.h"
 
+#include <libwebsockets.h>
+
 #include "../config.h"
 
 #ifndef YDXX_REMOTE_URL_LOGIN
