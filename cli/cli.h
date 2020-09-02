@@ -22,17 +22,19 @@
  *    SOFTWARE.
  */
 
+#include <wctype.h>
+
 #include "../config.h"
 
 #ifndef YUNDINGXX_CLI_CLI_H
 #define YUNDINGXX_CLI_CLI_H
 
 #ifndef YDXX_OUTPUT_DIRECTION_IN
-#define YDXX_OUTPUT_DIRECTION_IN '<'
+#define YDXX_OUTPUT_DIRECTION_IN L'<'
 #endif
 
 #ifndef YDXX_OUTPUT_DIRECTION_OUT
-#define YDXX_OUTPUT_DIRECTION_OUT '>'
+#define YDXX_OUTPUT_DIRECTION_OUT L'>'
 #endif
 
 // 初始化
@@ -43,26 +45,22 @@ cli_init();
 void
 cli_deinit();
 
-// 清除输入窗口的回显
+// 清除输入窗口
 void
 cli_clearWinInput();
 
-// 在输入窗口回显
-void
-cli_showInWinInput(const char *str);
-
 // 从输入窗口读入输入
-char
-cli_readCharFromWinInput();
+void
+cli_readStringFromWinInput(wint_t *dest);
 
 // 在输出窗口显示内容
 void
-cli_showInWinOutput(char dir, const char *str);
+cli_showInWinOutput(wint_t dir, const wint_t *str);
 
 #ifdef YDXX_DEBUG
 // 在调试窗口显示内容
 void
-cli_showInWinDebug(char dir, const char *str);
+cli_showInWinDebug(const wint_t *str);
 #endif
 
 #endif //YUNDINGXX_CLI_CLI_H

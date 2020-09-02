@@ -25,6 +25,10 @@
 #ifndef YUNDINGXX_CLI_CMD_H
 #define YUNDINGXX_CLI_CMD_H
 
+// 初始化
+void
+cmd_init();
+
 // 接收命令
 void
 cmd_receivingAndProcessingCommand();

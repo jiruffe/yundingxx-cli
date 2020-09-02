@@ -24,7 +24,7 @@
 
 #include "cli.h"
 
-#include <ncurses.h>
+#include <curses.h>
 
 #include "../config.h"
 
@@ -49,20 +49,23 @@ void
 cli_init() {
     // 初始化ncurses
     initscr();
-    // 禁用行缓冲、禁用CTRL+C
-    raw();
-    // 禁用默认回显
-    noecho();
-    // 禁用光标显示
-    curs_set(0);
     // 创建各个窗口
     win_holder.win_input = subwin(stdscr, 1, COLS, LINES - 1, 0);
+    scrollok(win_holder.win_input, 1);
 #ifdef YDXX_DEBUG
-    win_holder.win_output = subwin(stdscr, LINES - 1, COLS / 2, 0, 0);
-    win_holder.win_debug = subwin(stdscr, LINES - 1, COLS / 2, 0, COLS / 2);
+    win_holder.win_output = subwin(stdscr, LINES - 2, COLS / 2, 0, 0);
+    win_holder.win_debug = subwin(stdscr, LINES - 2, COLS / 2, 0, COLS / 2);
+    scrollok(win_holder.win_output, 1);
+    scrollok(win_holder.win_debug, 1);
 #else
-    win_holder.win_output = subwin(stdscr, LINES - 1, COLS, 0, 0);
+    win_holder.win_output = subwin(stdscr, LINES - 2, COLS, 0, 0);
+    scrollok(win_holder.win_output, 1);
 #endif
+    // 画条分割线
+    move(LINES - 2, 0);
+    hline('-', COLS);
+    // 光标放在输入窗口
+    move(LINES - 1, 0);
     // 刷新
     cli_refreshAll();
 }
@@ -80,39 +83,32 @@ cli_deinit() {
     endwin();
 }
 
-// 清除输入窗口的回显
+// 清除输入窗口
 void
 cli_clearWinInput() {
     wclear(win_holder.win_input);
     cli_refreshAll();
 }
 
-// 在输入窗口回显
-void
-cli_showInWinInput(const char *str) {
-    cli_clearWinInput();
-    wprintw(win_holder.win_input, str);
-    cli_refreshAll();
-}
-
 // 从输入窗口读入输入
-char
-cli_readCharFromWinInput() {
-    return wgetch(win_holder.win_input);
+void
+cli_readStringFromWinInput(wint_t *dest) {
+    wget_wstr(win_holder.win_input, dest);
+    cli_clearWinInput();
 }
 
 // 在输出窗口显示内容
 void
-cli_showInWinOutput(char dir, const char *str) {
-    wprintw(win_holder.win_output, "%c %s\n", dir, str);
+cli_showInWinOutput(wint_t dir, const wint_t *str) {
+    wprintw(win_holder.win_output, "%c %ls\n", dir, str);
     cli_refreshAll();
 }
 
 #ifdef YDXX_DEBUG
 // 在调试窗口显示内容
 void
-cli_showInWinDebug(char dir, const char *str) {
-    wprintw(win_holder.win_debug, "%c %s\n", dir, str);
+cli_showInWinDebug(const wint_t *str) {
+    wprintw(win_holder.win_debug, "%ls\n", str);
     cli_refreshAll();
 }
 #endif

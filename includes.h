@@ -30,6 +30,7 @@
 #include "cli/cli.h"
 #include "cmd/cmd.h"
 #include "game/game.h"
+#include "gnl/gnl.h"
 #include "init/init.h"
 
 #endif //YUNDINGXX_CLI_INCLUDES_H

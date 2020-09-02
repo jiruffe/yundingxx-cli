@@ -27,29 +27,20 @@
 #include <locale.h>
 
 #include "../cli/cli.h"
+#include "../cmd/cmd.h"
 #include "../game/game.h"
 
 // 初始化全部
 void
 init_all() {
     // 允许中文
-#if defined(__linux__)
-    setlocale(LC_ALL, "zh_CN.UTF-8");
-#elif defined(__unix__)
-    setlocale(LC_ALL, "zh_CN.UTF-8");
-#elif defined(_WIN32)
-    setlocale(LC_ALL, "zh-CN");
-#elif defined(_WIN64)
-    setlocale(LC_ALL, "zh-CN");
-#elif defined(__APPLE__)
-    setlocale(LC_ALL, "zh_CN.UTF-8");
-#else
-    setlocale(LC_ALL, "zh_CN.UTF-8");
-#endif
+    setlocale(LC_ALL, "");
     // 初始化cli
     cli_init();
     // 初始化游戏
     game_init();
+    // 初始化命令
+    cmd_init();
 }
 
 // 结束全部

@@ -28,6 +28,8 @@
 #include <string.h>
 #include <ctype.h>
 #include <stdbool.h>
+#include <wctype.h>
+#include <wchar.h>
 
 #include "../config.h"
 #include "../cli/cli.h"
@@ -38,11 +40,7 @@
 #endif
 
 #ifndef YDXX_COMMAND_SEPARATOR
-#define YDXX_COMMAND_SEPARATOR " "
-#endif
-
-#ifndef YDXX_COMMAND_KEY_PROCESS
-#define YDXX_COMMAND_KEY_PROCESS '\n'
+#define YDXX_COMMAND_SEPARATOR L" "
 #endif
 
 #ifndef YDXX_COMMAND_ARG_MAX_QUANTITY
@@ -64,32 +62,39 @@ enum COMMAND_TYPE_ENUM {
 // 命令结构
 typedef
 struct COMMAND {
-    char *original_string;
+    wint_t *original_string;
     size_t original_string_length;
     command_type_enum command_type;
     size_t argc;
-    char **argv;
+    wint_t **argv;
 } command_t;
+
+// 初始化
+void
+cmd_init() {
+    cli_showInWinOutput(YDXX_OUTPUT_DIRECTION_OUT, L"你好你好");
+}
 
 // 命令转换
 static
 int
-cmd_castCommand(command_t *command, char *command_string) {
+cmd_castCommand(command_t *command, wint_t *command_string) {
     command->original_string = command_string;
-    command->original_string_length = strlen(command_string);
+    command->original_string_length = wcslen(command_string);
     // 用空格分割
-    char *token = strtok(command_string, YDXX_COMMAND_SEPARATOR);
+    wint_t *buffer;
+    wint_t *token = wcstok(command_string, YDXX_COMMAND_SEPARATOR, &buffer);
     // 确定命令类型
-    if (!strcmp("quit", token)) {
+    if (!wcscmp(L"quit", token)) {
         command->command_type = QUIT;
-    } else if (!strcmp("login", token)) {
+    } else if (!wcscmp(L"login", token)) {
         command->command_type = LOGIN;
     } else {
         command->command_type = UNKNOWN;
     }
     // 参数
     command->argc = 0;
-    while (token = strtok(NULL, YDXX_COMMAND_SEPARATOR)) {
+    while (token = wcstok(NULL, YDXX_COMMAND_SEPARATOR, &buffer)) {
         command->argv[command->argc++] = token;
     }
     return 0;
@@ -99,40 +104,29 @@ cmd_castCommand(command_t *command, char *command_string) {
 void
 cmd_receivingAndProcessingCommand() {
 
-    char key;
-    char tmp_key[2] = {0};
-    char command_string[YDXX_COMMAND_STRING_MAX_LENGTH + 1] = {0};
+    wint_t command_string[YDXX_COMMAND_STRING_MAX_LENGTH + 1] = {0};
     command_t *command = (command_t *) malloc(sizeof(command_t));
-    command->argv = (char **) malloc(sizeof(char) * YDXX_COMMAND_ARG_MAX_QUANTITY * (YDXX_COMMAND_ARG_MAX_LENGTH + 1));
+    command->argv = (wint_t **) malloc(sizeof(wint_t) * YDXX_COMMAND_ARG_MAX_QUANTITY * (YDXX_COMMAND_ARG_MAX_LENGTH + 1));
 
     while (true) {
-        // 在最底下显示现在的命令内容
-        cli_showInWinInput(command_string);
         // 读入输入
-        key = cli_readCharFromWinInput();
-        if (!isprint(key)) {
-            if (YDXX_COMMAND_KEY_PROCESS == key) {
-                // 清空现在显示的输入
-                cli_clearWinInput();
-                // 显示一行表示接收到命令
-                cli_showInWinOutput(YDXX_OUTPUT_DIRECTION_IN, command_string);
-                // 处理命令
-                cmd_castCommand(command, command_string);
-                switch (command->command_type) {
-                    case QUIT:
-                        goto lb_exit;
-                    case UNKNOWN:
-                    default:
-                        break;
-                }
-                // 最后清空字符串
-                memset(command_string, 0, sizeof(command_string));
+        cli_readStringFromWinInput(command_string);
+        if (wcslen(command_string)) {
+            // 显示一行表示接收到命令
+            cli_showInWinOutput(YDXX_OUTPUT_DIRECTION_IN, command_string);
+            // 处理命令
+            cmd_castCommand(command, command_string);
+            switch (command->command_type) {
+                case QUIT:
+                    goto lb_exit;
+                case UNKNOWN:
+                default:
+                    cli_showInWinOutput(YDXX_OUTPUT_DIRECTION_OUT, L"Unknown command!");
+                    break;
             }
-            continue;
+            // 最后清空字符串
+            memset(command_string, 0, sizeof(command_string));
         }
-        // 拼接到命令
-        tmp_key[0] = key;
-        strcat(command_string, tmp_key);
     }
 
     lb_exit:
