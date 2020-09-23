@@ -25,9 +25,17 @@
 #ifndef YUNDINGXX_CLI_GAME_H
 #define YUNDINGXX_CLI_GAME_H
 
+typedef struct GAME_INSTANCE {
+
+} game_instance_t;
+
 // 初始化
 void
 game_init();
+
+// 获取游戏实例
+game_instance_t *
+game_getGameInstance();
 
 // 开始游戏
 void

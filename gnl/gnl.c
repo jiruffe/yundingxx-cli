@@ -26,11 +26,3 @@
 
 #include "../config.h"
 #include "../cli/cli.h"
-
-// 调试信息
-void
-gnl_dbg(const wint_t *str) {
-#ifdef YDXX_DEBUG
-    cli_showInWinDebug(str);
-#endif
-}

@@ -28,9 +28,17 @@
 
 #include "../config.h"
 
-#ifndef YDXX_REMOTE_URL_LOGIN
-#define YDXX_REMOTE_URL_LOGIN "ws://yundingxx.com:3014/"
+#ifndef YDXX_REMOTE_PROTOCOL
+#define YDXX_REMOTE_PROTOCOL "ws"
 #endif
-#ifndef YDXX_REMOTE_URL_GAME
-#define YDXX_REMOTE_URL_GAME "ws://yundingxx.com:3052/"
+#ifndef YDXX_REMOTE_DOMAIN
+#define YDXX_REMOTE_DOMAIN "yundingxx.com"
 #endif
+#ifndef YDXX_REMOTE_PORT_LOGIN
+#define YDXX_REMOTE_PORT_LOGIN 3014
+#endif
+#ifndef YDXX_REMOTE_PORT_GAME
+#define YDXX_REMOTE_PORT_GAME 3052
+#endif
+
+

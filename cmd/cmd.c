@@ -34,6 +34,7 @@
 #include "../config.h"
 #include "../cli/cli.h"
 #include "../api/api.h"
+#include "../gnl/gnl.h"
 
 #ifndef YDXX_COMMAND_STRING_MAX_LENGTH
 #define YDXX_COMMAND_STRING_MAX_LENGTH 1024
@@ -62,28 +63,40 @@ enum COMMAND_TYPE_ENUM {
 // 命令结构
 typedef
 struct COMMAND {
-    wint_t *original_string;
+    wchar_t *original_string;
     size_t original_string_length;
     command_type_enum command_type;
     size_t argc;
-    wint_t **argv;
+    wchar_t argv[YDXX_COMMAND_ARG_MAX_QUANTITY][YDXX_COMMAND_ARG_MAX_LENGTH];
 } command_t;
 
 // 初始化
 void
 cmd_init() {
-    cli_showInWinOutput(YDXX_OUTPUT_DIRECTION_OUT, L"你好你好");
+    cli_showInWinOutput(L"%c yundingxx-cli\n"
+                                                   "  云顶修仙命令行版\n"
+                                                   "  version: 1.0\n"
+                                                   "  https://github.com/jiruffe/yundingxx-cli\n"
+                                                   "  \n"
+                                                   "  命令用法:\n"
+                                                   "  \n"
+                                                   "  quit\n"
+                                                   "  退出\n"
+                                                   "  \n"
+                                                   "  login <username> <password>\n"
+                                                   "  登录\n"
+                                                   "  ", YDXX_OUTPUT_DIRECTION_OUT);
 }
 
 // 命令转换
 static
 int
-cmd_castCommand(command_t *command, wint_t *command_string) {
+cmd_castCommand(command_t *command, wchar_t *command_string) {
     command->original_string = command_string;
     command->original_string_length = wcslen(command_string);
     // 用空格分割
-    wint_t *buffer;
-    wint_t *token = wcstok(command_string, YDXX_COMMAND_SEPARATOR, &buffer);
+    wchar_t *buffer;
+    wchar_t *token = wcstok(command_string, YDXX_COMMAND_SEPARATOR, &buffer);
     // 确定命令类型
     if (!wcscmp(L"quit", token)) {
         command->command_type = QUIT;
@@ -95,7 +108,8 @@ cmd_castCommand(command_t *command, wint_t *command_string) {
     // 参数
     command->argc = 0;
     while (token = wcstok(NULL, YDXX_COMMAND_SEPARATOR, &buffer)) {
-        command->argv[command->argc++] = token;
+        wcscpy(command->argv[command->argc], token);
+        command->argc++;
     }
     return 0;
 }
@@ -104,25 +118,33 @@ cmd_castCommand(command_t *command, wint_t *command_string) {
 void
 cmd_receivingAndProcessingCommand() {
 
-    wint_t command_string[YDXX_COMMAND_STRING_MAX_LENGTH + 1] = {0};
+    wchar_t command_string[YDXX_COMMAND_STRING_MAX_LENGTH + 1] = {0};
     command_t *command = (command_t *) malloc(sizeof(command_t));
-    command->argv = (wint_t **) malloc(sizeof(wint_t) * YDXX_COMMAND_ARG_MAX_QUANTITY * (YDXX_COMMAND_ARG_MAX_LENGTH + 1));
 
     while (true) {
         // 读入输入
         cli_readStringFromWinInput(command_string);
         if (wcslen(command_string)) {
             // 显示一行表示接收到命令
-            cli_showInWinOutput(YDXX_OUTPUT_DIRECTION_IN, command_string);
+            cli_showInWinOutput(L"%c %ls", YDXX_OUTPUT_DIRECTION_IN, command_string);
             // 处理命令
             cmd_castCommand(command, command_string);
             switch (command->command_type) {
-                case QUIT:
+                case QUIT: {
                     goto lb_exit;
-                case UNKNOWN:
-                default:
-                    cli_showInWinOutput(YDXX_OUTPUT_DIRECTION_OUT, L"Unknown command!");
+                }
+                case LOGIN: {
+                    if (command->argc != 2) {
+                        cli_showInWinOutput(L"%c Error: LOGIN Expected 2 arguments but received %u!", YDXX_OUTPUT_DIRECTION_OUT, command->argc);
+                        break;
+                    }
                     break;
+                }
+                case UNKNOWN:
+                default: {
+                    cli_showInWinOutput(L"%c Unknown command!", YDXX_OUTPUT_DIRECTION_OUT);
+                    break;
+                }
             }
             // 最后清空字符串
             memset(command_string, 0, sizeof(command_string));
@@ -130,7 +152,6 @@ cmd_receivingAndProcessingCommand() {
     }
 
     lb_exit:
-    free(command->argv);
     free(command);
 
 }

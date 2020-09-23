@@ -23,6 +23,7 @@
  */
 
 #include <wctype.h>
+#include <wchar.h>
 
 #include "../config.h"
 
@@ -51,16 +52,14 @@ cli_clearWinInput();
 
 // 从输入窗口读入输入
 void
-cli_readStringFromWinInput(wint_t *dest);
+cli_readStringFromWinInput(wchar_t *dest);
 
 // 在输出窗口显示内容
 void
-cli_showInWinOutput(wint_t dir, const wint_t *str);
+cli_showInWinOutput(const wchar_t *format, ...);
 
-#ifdef YDXX_DEBUG
 // 在调试窗口显示内容
 void
-cli_showInWinDebug(const wint_t *str);
-#endif
+cli_showInWinDebug(const wchar_t *format, ...);
 
 #endif //YUNDINGXX_CLI_CLI_H

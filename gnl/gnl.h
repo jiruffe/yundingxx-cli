@@ -25,10 +25,4 @@
 #ifndef YUNDINGXX_CLI_GNL_H
 #define YUNDINGXX_CLI_GNL_H
 
-#include <wctype.h>
-
-// 调试信息
-void
-gnl_dbg(const wint_t *str);
-
 #endif //YUNDINGXX_CLI_GNL_H

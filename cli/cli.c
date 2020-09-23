@@ -28,6 +28,7 @@
 
 #include "../config.h"
 
+// 各个窗口
 static struct win_holder {
     WINDOW *win_input;
     WINDOW *win_output;
@@ -35,6 +36,9 @@ static struct win_holder {
     WINDOW *win_debug;
 #endif
 } win_holder;
+
+// 输出缓冲
+static wchar_t buff_output[1024];
 
 // 刷新全部显示
 static
@@ -92,23 +96,29 @@ cli_clearWinInput() {
 
 // 从输入窗口读入输入
 void
-cli_readStringFromWinInput(wint_t *dest) {
+cli_readStringFromWinInput(wchar_t *dest) {
     wget_wstr(win_holder.win_input, dest);
     cli_clearWinInput();
 }
 
 // 在输出窗口显示内容
 void
-cli_showInWinOutput(wint_t dir, const wint_t *str) {
-    wprintw(win_holder.win_output, "%c %ls\n", dir, str);
+cli_showInWinOutput(const wchar_t *format, ...) {
+    va_list vars;
+    va_start(vars, format);
+    vswprintf(buff_output, sizeof(buff_output) / sizeof(*buff_output), format, vars);
+    wprintw(win_holder.win_output, "%ls\n", buff_output);
     cli_refreshAll();
 }
 
-#ifdef YDXX_DEBUG
 // 在调试窗口显示内容
 void
-cli_showInWinDebug(const wint_t *str) {
-    wprintw(win_holder.win_debug, "%ls\n", str);
+cli_showInWinDebug(const wchar_t *format, ...) {
+#ifdef YDXX_DEBUG
+    va_list vars;
+    va_start(vars, format);
+    vswprintf(buff_output, sizeof(buff_output) / sizeof(*buff_output), format, vars);
+    wprintw(win_holder.win_debug, "%ls\n", buff_output);
     cli_refreshAll();
-}
 #endif
+}

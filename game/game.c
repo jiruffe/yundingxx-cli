@@ -24,12 +24,22 @@
 
 #include "game.h"
 
+#include <stdlib.h>
+
 #include "../cmd/cmd.h"
+
+static game_instance_t * instance;
 
 // 初始化
 void
 game_init() {
+    instance = (game_instance_t *) malloc(sizeof(game_instance_t));
+}
 
+// 获取游戏实例
+game_instance_t *
+game_getGameInstance() {
+    return instance;
 }
 
 // 开始游戏
