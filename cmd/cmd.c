@@ -58,34 +58,40 @@ enum COMMAND_TYPE_ENUM {
     UNKNOWN,
     QUIT,
     LOGIN,
-} command_type_enum;
+} command_type_e;
 
 // 命令结构
 typedef
 struct COMMAND {
     wchar_t *original_string;
     size_t original_string_length;
-    command_type_enum command_type;
+    command_type_e command_type;
     size_t argc;
-    wchar_t argv[YDXX_COMMAND_ARG_MAX_QUANTITY][YDXX_COMMAND_ARG_MAX_LENGTH];
+    wchar_t argv[YDXX_COMMAND_ARG_MAX_QUANTITY][YDXX_COMMAND_ARG_MAX_LENGTH + 1];
 } command_t;
 
 // 初始化
 void
 cmd_init() {
     cli_showInWinOutput(L"%c yundingxx-cli\n"
-                                                   "  云顶修仙命令行版\n"
-                                                   "  version: 1.0\n"
-                                                   "  https://github.com/jiruffe/yundingxx-cli\n"
-                                                   "  \n"
-                                                   "  命令用法:\n"
-                                                   "  \n"
-                                                   "  quit\n"
-                                                   "  退出\n"
-                                                   "  \n"
-                                                   "  login <username> <password>\n"
-                                                   "  登录\n"
-                                                   "  ", YDXX_OUTPUT_DIRECTION_OUT);
+                        "  云顶修仙命令行版\n"
+                        "  version: 1.0\n"
+                        "  https://github.com/jiruffe/yundingxx-cli\n"
+                        "  \n"
+                        "  命令用法:\n"
+                        "  \n"
+                        "  quit\n"
+                        "  退出\n"
+                        "  \n"
+                        "  login <username> <password>\n"
+                        "  登录\n"
+                        "  ", YDXX_OUTPUT_DIRECTION_OUT);
+}
+
+// 结束
+void
+cmd_deinit() {
+
 }
 
 // 命令转换
@@ -115,44 +121,44 @@ cmd_castCommand(command_t *command, wchar_t *command_string) {
 }
 
 // 接收命令
-void
+int
 cmd_receivingAndProcessingCommand() {
 
     wchar_t command_string[YDXX_COMMAND_STRING_MAX_LENGTH + 1] = {0};
     command_t *command = (command_t *) malloc(sizeof(command_t));
 
-    while (true) {
-        // 读入输入
-        cli_readStringFromWinInput(command_string);
-        if (wcslen(command_string)) {
-            // 显示一行表示接收到命令
-            cli_showInWinOutput(L"%c %ls", YDXX_OUTPUT_DIRECTION_IN, command_string);
-            // 处理命令
-            cmd_castCommand(command, command_string);
-            switch (command->command_type) {
-                case QUIT: {
-                    goto lb_exit;
-                }
-                case LOGIN: {
-                    if (command->argc != 2) {
-                        cli_showInWinOutput(L"%c Error: LOGIN Expected 2 arguments but received %u!", YDXX_OUTPUT_DIRECTION_OUT, command->argc);
-                        break;
-                    }
-                    break;
-                }
-                case UNKNOWN:
-                default: {
-                    cli_showInWinOutput(L"%c Unknown command!", YDXX_OUTPUT_DIRECTION_OUT);
-                    break;
-                }
+    // 读入输入
+    cli_readStringFromWinInput(command_string);
+    if (wcslen(command_string)) {
+        // 显示一行表示接收到命令
+        cli_showInWinOutput(L"%c %ls", YDXX_OUTPUT_DIRECTION_IN, command_string);
+        // 处理命令
+        cmd_castCommand(command, command_string);
+        switch (command->command_type) {
+            case QUIT: {
+                return -EXIT_POSITIVE;
             }
-            // 最后清空字符串
-            memset(command_string, 0, sizeof(command_string));
+            case LOGIN: {
+                if (command->argc != 2) {
+                    cli_showInWinOutput(L"%c Error: LOGIN Expected 2 arguments but received %u!",
+                                        YDXX_OUTPUT_DIRECTION_OUT, command->argc);
+                    break;
+                }
+                break;
+            }
+            case UNKNOWN:
+            default: {
+                cli_showInWinOutput(L"%c Unknown command!", YDXX_OUTPUT_DIRECTION_OUT);
+                break;
+            }
         }
+        // 最后清空字符串
+        memset(command_string, 0, sizeof(command_string));
     }
 
-    lb_exit:
     free(command);
+
+    return SUCCESS;
 
 }
 

@@ -29,8 +29,12 @@
 void
 cmd_init();
 
-// 接收命令
+// 结束
 void
+cmd_deinit();
+
+// 接收命令
+int
 cmd_receivingAndProcessingCommand();
 
 #endif //YUNDINGXX_CLI_CMD_H

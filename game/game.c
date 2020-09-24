@@ -25,6 +25,7 @@
 #include "game.h"
 
 #include <stdlib.h>
+#include <uv.h>
 
 #include "../cmd/cmd.h"
 
@@ -36,6 +37,12 @@ game_init() {
     instance = (game_instance_t *) malloc(sizeof(game_instance_t));
 }
 
+// 结束
+void
+game_deinit() {
+
+}
+
 // 获取游戏实例
 game_instance_t *
 game_getGameInstance() {
@@ -43,8 +50,11 @@ game_getGameInstance() {
 }
 
 // 开始游戏
-void
+int
 game_run() {
-    // 接收处理命令
-    cmd_receivingAndProcessingCommand();
+    int ret = 0;
+    while (!ret) {
+        // 接收处理命令
+        ret |= cmd_receivingAndProcessingCommand();
+    }
 }

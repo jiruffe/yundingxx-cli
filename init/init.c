@@ -46,5 +46,7 @@ init_all() {
 // 结束全部
 void
 deinit_all() {
+    cmd_deinit();
+    game_deinit();
     cli_deinit();
 }

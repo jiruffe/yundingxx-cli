@@ -27,10 +27,14 @@
 int
 main(int argc, char *argv[]) {
 
+    // 初始化
     init_all();
 
+    // 开始游戏
+    // 这里默认除非要退出否则这个函数并不会返回
     game_run();
 
+    // 回收资源
     deinit_all();
 
     return 0;

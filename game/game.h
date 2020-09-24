@@ -33,12 +33,16 @@ typedef struct GAME_INSTANCE {
 void
 game_init();
 
+// 结束
+void
+game_deinit();
+
 // 获取游戏实例
 game_instance_t *
 game_getGameInstance();
 
 // 开始游戏
-void
+int
 game_run();
 
 #endif //YUNDINGXX_CLI_GAME_H

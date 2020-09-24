@@ -25,4 +25,10 @@
 #ifndef YUNDINGXX_CLI_GNL_H
 #define YUNDINGXX_CLI_GNL_H
 
+typedef enum RET_ENUM {
+    SUCCESS = 0,
+    EXIT_POSITIVE,
+    ERROR_UNKNOWN,
+} ret_e;
+
 #endif //YUNDINGXX_CLI_GNL_H
